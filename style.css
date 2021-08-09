@@ -1,0 +1,95 @@
+body {
+    background-color: #f2f2f2;
+    color: #6b7381;
+    font-family: Helvetica, Arial, sans-serif;
+    margin: 0;
+}
+
+a, a:visited {
+    color: #9EB4CA;
+    text-decoration: none;
+}
+
+h1, h2, h3 .gallery{
+    text-align: center;
+}
+
+.gallery li {
+    list-style: none;
+    opacity: 0;
+}
+
+.gallery li.shown,
+.no-js .gallery li,
+.no-cssanimations .gallery li {
+    opacity: 1;
+}
+
+.gallery li a,
+.gallery li img {
+    outline: none;
+    border: none;
+    display: block;
+    max-width: 100%;
+}
+
+/* Effect 1: opacity */
+.gallery.effect-1 li.animate {
+    -webkit-animation: fadeIn 0.65s ease forwards;
+    animation: fadeIn 0.65s ease forwards;
+}
+
+@-webkit-keyframes fadeIn {
+    0% { }
+    100% { opacity: 1; }
+}
+
+@keyframes fadeIn {
+    0% { }
+    100% { opacity: 1; }
+}
+
+.gallery:after {
+    display: block;
+    height: 2px;
+    margin: .5em 0 1.4em;
+    background: -webkit-linear-gradient(left, rgba(0, 0, 0, 0) 0%, rgba(77,77,77,1) 50%, rgba(0, 0, 0, 0) 100%);
+    background: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(77,77,77,1) 50%, rgba(0, 0, 0, 0) 100%);
+}
+
+.gallery img {
+    cursor: pointer;
+    width: 240px;
+    height: 240px;
+    object-fit: cover;
+}
+
+.gallery a {
+    box-shadow: 0 0 4px -1px #000;
+    margin: 5px 5px;
+    width: 240px;
+    height: 240px;
+    position: relative;
+    vertical-align: bottom;
+    font-size: 24px;
+    overflow: hidden;
+}
+
+.baguetteBoxOne {
+    width:1000px; 
+    margin:40px auto 0 auto;
+}
+
+#return_top {
+    width:60px; 
+    height:44px;
+    position:fixed; 
+    right:25px; 
+    bottom:10px; 
+    display:none; 
+}
+
+#foot {
+    text-align:center;margin:1px 0;
+    font:normal 14px/24px 'MicroSoft YaHei';
+}

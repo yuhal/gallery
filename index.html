@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-// W3C// DTD XHTML 1.0 Transitional// EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="no-js">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>图片瀑布流加载</title>
+        <link rel="stylesheet" href="baguettebox.min.css"/>
+        <link rel="stylesheet" href="style.css"/>
+        <script src="jquery-3.1.1.min.js"></script>
+        <script src="baguettebox.min.js"></script>
+        <script src="modernizr.custom.js"></script>
+    </head>
+    <body>
+
+        <div id="gallery" class="baguetteBoxOne gallery effect-1"> 
+        </div>
+        <button id="return_top" class="baguetteBox-button">
+            <svg width="60" height="44"><polyline points="50 30 30 10 10 30" stroke="rgba(255,255,255,0.5)" stroke-width="4" stroke-linecap="butt" fill="none" stroke-linejoin="round"></polyline></svg>
+        </button>
+        <div id="foot">
+            <p>Powered by Baguettebox & AnimOnScroll © HaI</p>
+        </div>
+
+        <script src="masonry.pkgd.min.js"></script> 
+        <script src="imagesloaded.js"></script> 
+        <script src="classie.js"></script> 
+        <script src="AnimOnScroll.js"></script>
+        <script type="text/javascript">
+            // 滚动超过一屏幕应该显示，否则消失
+            var pagelookheight = document.documentElement.clientHeight;
+            $(function () {
+                $(window).scroll(function(){
+                    if ($(window).scrollTop()>pagelookheight){
+                        $("#return_top").fadeIn(500);
+                    }else{
+                        $("#return_top").fadeOut(500);
+                    }
+                });
+                // 当点击跳转链接后，回到页面顶部位置
+                $("#return_top").click(function(){
+                    // 此处加入finish防止多次点击回顶部或者回底部多次触发动画的bug,也可以使用stop()来替换finish()
+                    $("html,body").stop().animate({"scrollTop":"0px"},1500);
+                });
+            });
+
+            $(function(){   
+                getImage();
+                setTimeout(function () {
+                    start(true)
+                },1000)
+                LazyLoading();
+            })
+
+            $(window).on('scroll', function(){
+                start()
+            })
+
+            function start(init=false){
+                // 选中已加载的图片不需要重新加载
+                $('#gallery img').not('[data-isLoaded]').each(function(){
+                    var $node = $(this)
+                    if( isShow($node) ){
+                        loadImg($node)
+                    }else if(init == true){
+                        loadImg($node)
+                    }
+                })
+            }
+
+            //判断一个元素是不是出现在窗口(视野)
+            function isShow($node){
+                return $node.offset().top < $(window).height() + $(window).scrollTop()
+            }
+
+            //加载图片
+            function loadImg($img){
+                $img.attr('src', $img.attr('data-src')) //把data-src的值 赋值给src
+                $img.attr('data-isLoaded', 1)//已加载的图片做标记
+            }
+
+            // 获取图片
+            function getImage(){
+                $.ajax({
+                    type: "GET",
+                    url: 'index.json',
+                    dataType: "json",
+                    async : false,
+                    success: function(data){
+                        var html = '';
+                        var sort = 0;
+                        $.each(data, function(i, info){
+                            sort = i+1;
+                            html += '<li><a href="'+info.url+'" title="第'+sort+'张图片 '+info.key+'"><img data-src="'+info.url+'" src="default.png"></a></li>';
+                        });  
+                        $('.gallery').append(html);  
+                    },
+                    error: function(data){
+                        alert('暂无图片')
+                    }
+                });
+                baguetteBox.run('.baguetteBoxOne', {
+                    animation: 'fadeIn',
+                });
+            }
+
+            // 懒加载
+            function LazyLoading(){
+                new AnimOnScroll(document.getElementById('gallery'), {
+                    minDuration: 0.4,
+                    maxDuration: 0.7,
+                    viewportFactor: 0.2
+                }); 
+            }
+        </script>
+    </body>
+</html>
